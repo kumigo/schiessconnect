@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1b1f24">
+  <title>Schießconnect Foto</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Schießconnect Foto</h1>
+    <div class="head-actions">
+      <button id="btn-ballistics" class="ghost">Flugbahn</button>
+      <button id="btn-settings" class="ghost" aria-label="Einstellungen">⚙︎</button>
+    </div>
+  </header>
+
+  <section id="settings" hidden>
+    <h2>Einstellungen</h2>
+    <div class="grid">
+      <label>Scheibe Breite (cm)<input id="s-width" type="number" inputmode="decimal" step="0.1" min="5"></label>
+      <label>Scheibe Höhe (cm)<input id="s-height" type="number" inputmode="decimal" step="0.1" min="5"></label>
+      <label class="wide">Kaliber<select id="s-calpreset"></select></label>
+      <label>Geschoss-Ø (mm)<input id="s-caliber" type="number" inputmode="decimal" step="0.01" min="2"></label>
+      <label>Entfernung (m)<input id="s-distance" type="number" inputmode="decimal" step="1" min="1"></label>
+      <label class="wide">Optik<select id="s-optic"></select></label>
+      <label>Klick-Einheit
+        <select id="s-unit"><option value="mrad">MRAD</option><option value="moa">MOA</option><option value="cm">cm / 100 m</option></select>
+      </label>
+      <label>Wert pro Klick<input id="s-click" type="number" inputmode="decimal" step="0.01" min="0.01"></label>
+    </div>
+    <p class="hint">Breite und Höhe sind die Maße des Bereichs, dessen 4 Ecken du im Foto antippst, meist das ganze Scheibenpapier.
+      Typisch: 0,1 MRAD oder 0,25 MOA pro Klick.</p>
+    <button id="btn-settings-done">Fertig</button>
+  </section>
+
+  <section id="ballistics" class="panel" hidden>
+    <h2>Flugbahn</h2>
+    <div class="grid">
+      <label class="wide">Munition<select id="b-ammo"></select></label>
+      <label>V0 (m/s)<input id="b-v0" type="number" inputmode="decimal" step="1" min="100"></label>
+      <label>BC (G1)<input id="b-bc" type="number" inputmode="decimal" step="0.001" min="0.05"></label>
+      <label>Geschoss (g)<input id="b-mass" type="number" inputmode="decimal" step="0.1" min="1"></label>
+      <label>Visierhöhe (cm)<input id="b-sight" type="number" inputmode="decimal" step="0.1" min="0"></label>
+      <label>Fleck auf (m)<input id="b-zero" type="number" inputmode="decimal" step="1" min="10"></label>
+      <div class="field-btn"><button id="btn-gee" class="ghost">GEE einstellen</button></div>
+    </div>
+    <p id="b-gee" class="hint"></p>
+    <div class="table-wrap"><table id="b-table"></table></div>
+    <p class="hint">Treffpunkt: + über, − unter dem Haltepunkt. Klicks: so viel verstellen, um auf dieser Entfernung Fleck zu treffen.
+      Visierhöhe = Mitte Zielfernrohr über Mitte Lauf. Richtwerte für Normalluft (15 °C, Meereshöhe), am Stand prüfen.</p>
+    <button id="btn-ballistics-done">Fertig</button>
+  </section>
+
+  <section id="step-photo">
+    <p>Fotografiere die Scheibe möglichst gerade von vorn. Alle 4 Ecken müssen auf dem Bild sein.</p>
+    <label class="button big">📷 Foto aufnehmen
+      <input id="in-camera" type="file" accept="image/*" capture="environment" hidden>
+    </label>
+    <label class="button ghost">Foto aus Galerie wählen
+      <input id="in-file" type="file" accept="image/*" hidden>
+    </label>
+  </section>
+
+  <section id="step-corners" hidden>
+    <p id="corner-hint" class="hint">Tippe die 4 Ecken der Scheibe an. Halte gedrückt und schiebe zum Feinjustieren.</p>
+    <div class="canvas-wrap"><canvas id="cv-photo"></canvas></div>
+    <div class="row">
+      <button id="btn-corners-reset" class="ghost">Ecken neu</button>
+      <button id="btn-corners-done" disabled>Weiter</button>
+    </div>
+  </section>
+
+  <section id="step-result" hidden>
+    <div class="tabs" role="tablist">
+      <button id="tab-group" role="tab" aria-selected="true">Trefferbild</button>
+      <button id="tab-zero" role="tab" aria-selected="false">Einschießen</button>
+    </div>
+    <div id="result-box" class="result"></div>
+    <div class="canvas-wrap"><canvas id="cv-target"></canvas></div>
+    <p id="target-hint" class="hint"></p>
+    <div class="row">
+      <button id="btn-zoom" class="ghost">Ganze Scheibe</button>
+      <button id="btn-set-dot" class="ghost" hidden>Punkt setzen</button>
+    </div>
+    <label class="slider">Empfindlichkeit
+      <input id="in-sens" type="range" min="1" max="10" step="1">
+    </label>
+    <div class="row">
+      <button id="btn-edit-corners" class="ghost">Ecken ändern</button>
+      <button id="btn-new-photo">Neues Foto</button>
+    </div>
+  </section>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
